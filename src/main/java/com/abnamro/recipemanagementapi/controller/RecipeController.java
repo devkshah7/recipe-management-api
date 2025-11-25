@@ -1,5 +1,6 @@
 package com.abnamro.recipemanagementapi.controller;
 
+import com.abnamro.recipemanagementapi.exception.ResourceNotFoundException;
 import com.abnamro.recipemanagementapi.model.Recipe;
 import com.abnamro.recipemanagementapi.service.RecipeService;
 import com.abnamro.recipemanagementapi.specification.RecipeSpecifications;
@@ -34,7 +35,9 @@ public class RecipeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> get(@PathVariable Long id) {
-        return recipeService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Recipe recipe = recipeService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + id));
+        return ResponseEntity.ok(recipe);
     }
 
     @PutMapping("/{id}")
@@ -67,16 +70,20 @@ public class RecipeController {
             @RequestParam(required = false) List<String> exclude,
             @RequestParam(required = false) String text,
             @RequestParam(required = false) Integer preparationTime) {
+        boolean noFilters = vegetarian == null &&
+                servings == null &&
+                (include == null || include.isEmpty()) &&
+                (exclude == null || exclude.isEmpty()) &&
+                (text == null || text.isBlank()) &&
+                preparationTime == null;
+        if(noFilters) {
+            return ResponseEntity.ok(recipeService.findAll());
+        }
         //normalize ingredient inputs to lower-case and trimmed
         List<String> includesNormalized = (include == null) ? null : include.stream().map(s -> s.trim().toLowerCase()).collect(Collectors.toList());
         List<String> excludesNormalized = (exclude == null) ? null : exclude.stream().map(s -> s.trim().toLowerCase()).collect(Collectors.toList());
         Specification<Recipe> spec = RecipeSpecifications.buildSpecification(vegetarian, servings, includesNormalized, excludesNormalized, text, preparationTime);
-        List<Recipe> list;
-        if(spec == null){
-            list = recipeService.findAll();
-        } else {
-            list = recipeService.findAll(spec);
-        }
-        return ResponseEntity.ok(list);
+
+        return ResponseEntity.ok(recipeService.findAll(spec));
     }
 }

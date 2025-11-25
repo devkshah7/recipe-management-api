@@ -96,6 +96,7 @@ public class RecipeService {
     }
 
     public List<Recipe> findAll(Specification<Recipe> specification) {
+        if(specification == null) return recipeRepository.findAll();
         return recipeRepository.findAll(specification);
     }
 
