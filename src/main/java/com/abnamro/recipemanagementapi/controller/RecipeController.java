@@ -7,9 +7,11 @@ import jakarta.validation.Valid;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -17,9 +19,11 @@ import java.util.stream.Collectors;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final ObjectMapper objectMapper;
 
-    public RecipeController(RecipeService recipeService) {
+    public RecipeController(RecipeService recipeService,  ObjectMapper objectMapper) {
         this.recipeService = recipeService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping
@@ -35,14 +39,22 @@ public class RecipeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> update(@PathVariable Long id, @Valid @RequestBody Recipe recipe) {
-        return recipeService.findById(id).map(existing -> {
-            recipe.setId(id);
-            return ResponseEntity.ok(recipeService.save(recipe));
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        //service.update will throw ResourceNotFoundException if id not present
+        Recipe updated =  recipeService.update(id, recipe);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Recipe> partialUpdate(@PathVariable Long id,
+                                                @RequestBody Map<String, Object> updates) {
+        //service.partialUpdate will throw ResourceNotFoundException if id not present
+        Recipe updated = recipeService.partialUpdate(id, updates, objectMapper);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        //service.deleteById will throw ResourceNotFoundException if id not present
         recipeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
