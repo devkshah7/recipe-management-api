@@ -123,10 +123,12 @@ Explanation:
 You will see output like:
 `TCP server running at TCP://0.0.0.0:9092`
 `Web Console server running at http://0.0.0.0:8082`
+
 2. **_Access the H2 Web Console_**
 
 Open in the browser:
 `http://localhost:8082`
+
 3. **_Connect using:_**
 `JDBC URL: jdbc:h2:tcp://localhost:9092/mem:recipesdb`
 `User: sa`
