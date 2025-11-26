@@ -1,6 +1,5 @@
-package com.abnamro.recipemanagementapi;
+package com.abnamro.recipemanagementapi.controller;
 
-import com.abnamro.recipemanagementapi.controller.RecipeController;
 import com.abnamro.recipemanagementapi.exception.GlobalExceptionHandler;
 import com.abnamro.recipemanagementapi.model.Recipe;
 import com.abnamro.recipemanagementapi.service.RecipeService;

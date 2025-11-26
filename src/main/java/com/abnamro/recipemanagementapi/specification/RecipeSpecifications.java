@@ -3,6 +3,7 @@ package com.abnamro.recipemanagementapi.specification;
 import com.abnamro.recipemanagementapi.model.Recipe;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,12 +66,30 @@ public class RecipeSpecifications {
                                                            List<String> excludes,
                                                            String text,
                                                            Integer preparationTime) {
-        Specification<Recipe> spec = Specification.where(vegetarian(vegetarian))
-                .and(servings(servings))
-                .and(includeIngredients(includes))
-                .and(excludeIngredients(excludes))
-                .and(textInInstructions(text))
-                .and(preparationTime(preparationTime));
-        return spec;
+        List<Specification<Recipe>> parts = new ArrayList<>();
+
+        Specification<Recipe> s1 = vegetarian(vegetarian);
+        Specification<Recipe> s2 = servings(servings);
+        Specification<Recipe> s3 = preparationTime(preparationTime);
+        Specification<Recipe> s4 = textInInstructions(text);
+        Specification<Recipe> s5 = includeIngredients(includes);
+        Specification<Recipe> s6 = excludeIngredients(excludes);
+
+        if(s1 != null) parts.add(s1);
+        if(s2 != null) parts.add(s2);
+        if(s3 != null) parts.add(s3);
+        if(s4 != null) parts.add(s4);
+        if(s5 != null) parts.add(s5);
+        if(s6 != null) parts.add(s6);
+
+        if(parts.isEmpty()) return null;
+
+        Specification<Recipe> result = parts.get(0);
+
+        for(int i=1; i<parts.size(); i++) {
+            result = result.and(parts.get(i));
+        }
+
+        return result;
     }
 }
