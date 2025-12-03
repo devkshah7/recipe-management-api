@@ -1,8 +1,8 @@
 # **RECIPE MANAGEMENT API**
 
-A Spring Boot 3.3.x based RESTful API for managing recipes, including full CRUD support, advanced filtering, exception handling, unit tests, integration tests, and OpenAPI documentation.
+A Spring Boot 4.0.0 based RESTful API for managing recipes, including full CRUD support, advanced filtering, exception handling, unit tests, integration tests, and OpenAPI documentation.
 
-This project is built as part of a learning assignment and follows clean architecture practices using Java 21, Spring Boot 3, H2 Database, Spring Data JPA, and Springdoc OpenAPI.
+This project is built as part of a learning assignment and follows clean architecture practices using Java 21, Spring Boot 4, H2 Database, Spring Data JPA, and Springdoc OpenAPI.
 
 ## **FEATURES:**
 
@@ -49,12 +49,12 @@ All major features are covered.
 | Area        | Technology                |
 |-------------|---------------------------|
 | Language    | Java 21                   |
-| Framework   | Spring Boot 3.3.x         |
+| Framework   | Spring Boot 4.0.0         |
 | Database    | H2 (in-memory)            |
 | Persistence | Spring Data JPA           |
 | API Docs    | Springdoc OpenAPI 2.x     |
 | Testing     | JUnit 5, MockMvc, Mockito |
-| Build Tool  | Maven
+| Build Tool  | Maven                     
 
 ### **Project Structure**
 1. src/
